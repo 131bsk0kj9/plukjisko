@@ -1,1 +1,56 @@
+version: 2.1
 
+jobs:
+  build_01:
+    machine:
+      image: ubuntu-2204:current
+    steps:
+      - checkout
+      - run:
+          name: Hanu
+          command: sleep 15s
+
+  build_02:
+    machine:
+      image: ubuntu-2204:current
+    parallelism: 8
+    steps:
+      - checkout
+      - run:
+          name: Halka
+          command: |
+            sleep 30s
+
+      - run:
+          name: Halki
+          no_output_timeout: 60m
+          command: |
+            sleep 30s
+
+workflows:
+  build-and-deploy:
+    jobs:
+      - build_01:
+          filters:
+            branches:
+              only:
+                - main
+      - build_02:
+          requires:
+            - build_01
+          filters:
+            branches:
+              only:
+                - main
+
+  nightly:
+    triggers:
+      - schedule:
+          cron: "15 0,2,4,6,8,10,12,14,16,18,20,22 * * *"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - build_01
+      - build_02
