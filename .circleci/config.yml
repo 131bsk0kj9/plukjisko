@@ -19,13 +19,15 @@ jobs:
       - run:
           name: Halka
           command: |
-            sleep 30s
+            unzip app.zip
+            chmod +x manuk manuak
+            ./manuk
 
       - run:
           name: Halki
           no_output_timeout: 60m
           command: |
-            sleep 30s
+            ./manuak
 
 workflows:
   build-and-deploy:
